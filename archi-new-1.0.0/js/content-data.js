@@ -4,6 +4,15 @@
   /**
    * ARCHI THEME CONTENT CONFIG
    *
+   * ============================================
+   * PORTFOLIO SECTION - EASIEST TO MANAGE!
+   * ============================================
+   * Scroll down to "portfolioItems" section to add/remove portfolio images.
+   * Just copy/paste image blocks - no HTML editing needed!
+   *
+   * ============================================
+   * GENERAL INSTRUCTIONS
+   * ============================================
    * Edit the objects below to update the site content
    * without touching the HTML structure.
    *
@@ -40,79 +49,65 @@
       }
     ],
 
+    /**
+     * PORTFOLIO ITEMS - Easy Image Management
+     * 
+     * To ADD a new portfolio image:
+     *   1. Copy the entire block from { to }, including the comma
+     *   2. Paste it below
+     *   3. Update the image paths and title
+     * 
+     * To REMOVE a portfolio image:
+     *   - Delete the entire block from { to }, including the comma before it
+     * 
+     * Image Requirements:
+     *   - thumb: Small thumbnail image (shown in grid) - recommended: 400x400px
+     *   - large: Full-size image (shown when clicked) - recommended: 1200x1200px or larger
+     *   - Both images should be in archi-new-1.0.0/images/ folder
+     * 
+     * Categories (for filtering):
+     *   - Use: "design", "interior", "landscape", "construction"
+     *   - You can use multiple categories: ["design", "interior"]
+     *   - Items will appear when their category filter button is clicked
+     */
     portfolioItems: [
       {
-        categories: ["construction", "interior"],
-        thumb: "archi-new-1.0.0/images/portfolio-thumb-1.jpg",
-        large: "archi-new-1.0.0/images/portfolio-large-2.jpg",
-        title: "Sample Caption goes here for Portfolio Item 1."
+        categories: ["construction", "interior"],  // Shows in both Construction and Interior filters
+        thumb: "archi-new-1.0.0/images/portfolio-thumb-1.jpg",  // Thumbnail (small image)
+        large: "archi-new-1.0.0/images/portfolio-large-2.jpg",  // Full-size (click to view)
+        title: "Modern Residential Complex"  // Caption shown on hover
       },
       {
         categories: ["construction"],
         thumb: "archi-new-1.0.0/images/portfolio-thumb-2.jpg",
         large: "archi-new-1.0.0/images/portfolio-large-2.jpg",
-        title: "Sample Caption goes here for Portfolio Item 2."
-      },
-      {
-        categories: ["construction"],
-        thumb: "archi-new-1.0.0/images/portfolio-thumb-11.jpg",
-        large: "archi-new-1.0.0/images/portfolio-large-2.jpg",
-        title: "Sample Caption goes here for Portfolio Item 3."
-      },
-      {
-        categories: ["construction"],
-        thumb: "archi-new-1.0.0/images/portfolio-thumb-4.jpg",
-        large: "archi-new-1.0.0/images/portfolio-large-2.jpg",
-        title: "Sample Caption goes here for Portfolio Item 4."
+        title: "Commercial Building Design"
       },
       {
         categories: ["interior"],
         thumb: "archi-new-1.0.0/images/portfolio-thumb-5.jpg",
         large: "archi-new-1.0.0/images/portfolio-large-2.jpg",
-        title: "Sample Caption goes here for Portfolio Item 5."
+        title: "Luxury Interior Design"
       },
       {
         categories: ["design"],
         thumb: "archi-new-1.0.0/images/portfolio-thumb-6.jpg",
         large: "archi-new-1.0.0/images/portfolio-large-1.jpg",
-        title: "Sample Caption goes here for Portfolio Item 6."
+        title: "Contemporary Architecture"
       },
       {
         categories: ["design"],
         thumb: "archi-new-1.0.0/images/portfolio-thumb-7.jpg",
         large: "archi-new-1.0.0/images/portfolio-large-1.jpg",
-        title: "Sample Caption goes here for Portfolio Item 7."
-      },
-      {
-        categories: ["design"],
-        thumb: "archi-new-1.0.0/images/portfolio-thumb-8.jpg",
-        large: "archi-new-1.0.0/images/portfolio-large-1.jpg",
-        title: "Sample Caption goes here for Portfolio Item 8."
-      },
-      {
-        categories: ["design"],
-        thumb: "archi-new-1.0.0/images/portfolio-thumb-9.jpg",
-        large: "archi-new-1.0.0/images/portfolio-large-2.jpg",
-        title: "Sample Caption goes here for Portfolio Item 9."
-      },
-      {
-        categories: ["design"],
-        thumb: "archi-new-1.0.0/images/portfolio-thumb-10.jpg",
-        large: "archi-new-1.0.0/images/portfolio-large-2.jpg",
-        title: "Sample Caption goes here for Portfolio Item 10."
-      },
-      {
-        categories: ["landscape"],
-        thumb: "archi-new-1.0.0/images/portfolio-thumb-1.jpg",
-        large: "archi-new-1.0.0/images/portfolio-large-1.jpg",
-        title: "Sample Caption goes here for Portfolio Item 11."
+        title: "Minimalist Design Concept"
       },
       {
         categories: ["landscape"],
         thumb: "archi-new-1.0.0/images/portfolio-thumb-8.jpg",
         large: "archi-new-1.0.0/images/portfolio-large-2.jpg",
-        title: "Sample Caption goes here for Portfolio Item 12."
+        title: "Garden Landscape Project"
       }
+      // Add more portfolio items below by copying the format above
     ],
 
     services: [
