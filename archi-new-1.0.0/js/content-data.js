@@ -16,6 +16,8 @@
     "design"
   ];
 
+  var galleriesLoaded = 0;
+
   window.archiContent = {
     heroSlides: [
       {
@@ -138,6 +140,10 @@
         }, 80);
       }
       $(document).trigger('portfolio:rendered');
+      galleriesLoaded++;
+      if (galleriesLoaded === 2) {
+        initChocolat();
+      }
     };
 
     if (!imagesLeft) {
@@ -207,6 +213,10 @@
     var imagesLeft = $images.length;
     var finalizeGallery = function () {
       $(document).trigger('footer:rendered');
+      galleriesLoaded++;
+      if (galleriesLoaded === 2) {
+        initChocolat();
+      }
     };
 
     if (!imagesLeft) {
