@@ -81,14 +81,8 @@
       }
     ],
 
-    footerGallery: [
-      {
-        href: "archi-new-1.0.0/images/spacejoy.jpg",
-        src: "archi-new-1.0.0/images/postimg1.jpg",
-        title: "Calm Before The Storm",
-        alt: "house"
-      }
-    ]
+    // This array starts empty and gets populated by Sanity
+    footerGallery: []
   };
 
   function renderHeroSlides() {
@@ -208,6 +202,27 @@
         '<img src="' + item.src + '" alt="' + (item.alt || "") + '" class="gallery-image"></a>';
       $gallery.append(html);
     });
+
+    var $images = $gallery.find('img');
+    var imagesLeft = $images.length;
+    var finalizeGallery = function () {
+      $(document).trigger('footer:rendered');
+    };
+
+    if (!imagesLeft) {
+      finalizeGallery();
+      return;
+    }
+
+    $images.each(function () {
+      if (this.complete && this.naturalWidth) {
+        if (!--imagesLeft) finalizeGallery();
+      } else {
+        $(this).one('load error', function () {
+          if (!--imagesLeft) finalizeGallery();
+        });
+      }
+    });
   }
 
   // ==========================================
@@ -260,12 +275,48 @@
       .catch(err => console.error("Error fetching from Sanity:", err));
   }
 
+  function fetchFooterGalleryFromSanity() {
+    // 🔥 1. REPLACE THIS WITH YOUR 8-CHARACTER SANITY PROJECT ID
+    const projectId = "aqcd5swq"; 
+    const dataset = "production";
+
+    // This GROQ query says: "Get all footer gallery items"
+    const groqQuery = '*[_type == "footerGallery"]{ title, "href": image.asset->url, "src": thumbnail.asset->url, alt }';
+    const encodedQuery = encodeURIComponent(groqQuery);
+    
+    // The standard Sanity HTTP API URL
+    const url = `https://${projectId}.api.sanity.io/v2024-04-05/data/query/${dataset}?query=${encodedQuery}`;
+
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        if (!data.result) return;
+        
+        const allItems = [];
+
+        // Loop over every footer gallery item
+        data.result.forEach(item => {
+          allItems.push({
+            href: item.href + "?w=1600&auto=format",
+            src: item.src + "?w=600&h=600&fit=crop&auto=format",
+            title: item.title || "",
+            alt: item.alt || ""
+          });
+        });
+
+        // Push the formatted items into the theme's content engine and render
+        window.archiContent.footerGallery = allItems;
+        renderFooterGallery();
+      })
+      .catch(err => console.error("Error fetching footer gallery from Sanity:", err));
+  }
+
   $(document).ready(function () {
     // Build dynamic sections BEFORE theme plugins initialize
     renderHeroSlides();
     fetchPortfolioFromSanity(); // Call Sanity instead of Cloudinary
     renderServices();
     renderBlogPosts();
-    renderFooterGallery();
+    fetchFooterGalleryFromSanity(); // Fetch footer gallery from Sanity
   });
 })(jQuery);
