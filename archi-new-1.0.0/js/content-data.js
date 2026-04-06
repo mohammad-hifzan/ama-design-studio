@@ -114,7 +114,7 @@
   function renderPortfolio() {
     var data = window.archiContent && window.archiContent.portfolioItems;
     if (!data || !data.length) return;
-    var $grid = $(".grid");
+    var $grid = $("#portfolio .grid");
     if (!$grid.length) return;
     $grid.empty();
     $.each(data, function (index, item) {
@@ -130,11 +130,36 @@
         "</div>";
       $grid.append(html);
     });
-    
-    // If Isotope was already initialized, refresh its layout after adding new portfolio items.
-    if ($grid.data('isotope')) {
-      $grid.isotope('reloadItems').isotope('layout');
+
+    var $images = $grid.find('img');
+    var imagesLeft = $images.length;
+    var layoutPortfolio = function () {
+      if ($grid.data('isotope')) {
+        $grid.isotope('reloadItems').isotope('layout');
+        window.requestAnimationFrame(function () {
+          $grid.isotope('layout');
+        });
+        setTimeout(function () {
+          $grid.isotope('layout');
+        }, 80);
+      }
+      $(document).trigger('portfolio:rendered');
+    };
+
+    if (!imagesLeft) {
+      layoutPortfolio();
+      return;
     }
+
+    $images.each(function () {
+      if (this.complete && this.naturalWidth) {
+        if (!--imagesLeft) layoutPortfolio();
+      } else {
+        $(this).one('load error', function () {
+          if (!--imagesLeft) layoutPortfolio();
+        });
+      }
+    });
   }
 
   function renderServices() {

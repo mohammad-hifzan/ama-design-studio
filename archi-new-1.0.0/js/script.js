@@ -2,41 +2,47 @@
 
   "use strict";
 
-  // init Isotope
-	var initIsotope = function () {
+  var filterPortfolio = function (filterValue) {
+    var $grid = $('#portfolio .grid');
+    if (!$grid.length) return;
 
-		$('.grid').each(function () {
+    if (!filterValue || filterValue === '*') {
+      $grid.find('.portfolio-item').show();
+      return;
+    }
 
-			// $('.grid').imagesLoaded( function() {
-			// images have loaded
-			var $buttonGroup = $('.button-group');
-			var $checked = $buttonGroup.find('.is-checked');
-			var filterValue = $checked.attr('data-filter');
+    $grid.find('.portfolio-item').each(function () {
+      var $item = $(this);
+      if ($item.is(filterValue)) {
+        $item.show();
+      } else {
+        $item.hide();
+      }
+    });
+  };
 
-			var $grid = $('.grid').isotope({
-				itemSelector: '.portfolio-item',
-				// layoutMode: 'fitRows',
-				filter: filterValue
-			});
+  var initIsotope = function () {
+    var $buttonGroup = $('#portfolio #filters');
+    var $checked = $buttonGroup.find('.is-checked');
+    var filterValue = $checked.attr('data-filter') || '*';
 
-			// bind filter button click
-			$('.button-group').on('click', 'a', function (e) {
-				e.preventDefault();
-				filterValue = $(this).attr('data-filter');
-				$grid.isotope({ filter: filterValue });
-			});
+    filterPortfolio(filterValue);
 
-			// change is-checked class on buttons
-			$('.button-group').each(function (i, buttonGroup) {
-				$buttonGroup.on('click', 'a', function () {
-					$buttonGroup.find('.is-checked').removeClass('is-checked');
-					$(this).addClass('is-checked');
-				});
-			});
-			// });
+    $buttonGroup.off('click', 'a').on('click', 'a', function (e) {
+      e.preventDefault();
+      filterValue = $(this).attr('data-filter');
+      filterPortfolio(filterValue);
+      $buttonGroup.find('.is-checked').removeClass('is-checked');
+      $(this).addClass('is-checked');
+    });
+  };
 
-		});
-	}
+  $(document).on('portfolio:rendered', function () {
+    var $buttonGroup = $('#portfolio #filters');
+    var $checked = $buttonGroup.find('.is-checked');
+    var filterValue = $checked.attr('data-filter') || '*';
+    filterPortfolio(filterValue);
+  });
 
   var initTexts = function(){
     // Wrap every letter in a span
@@ -214,10 +220,12 @@
       keepImg: true,
     });
 
+    initIsotope();
+
   }); // End of document ready
 
   // preloader
-	$(window).load(function () {
+	$(window).on('load', function () {
 		$(".preloader").fadeOut("slow");
 		initIsotope();
 	});
