@@ -216,14 +216,14 @@
     searchButton();
     initSlider();
     jsTabs();
-    // Initialize Chocolat for static elements (like footer gallery)
-    var staticElements = document.querySelectorAll('.image-link:not(.portfolio-link)');
-    if (staticElements.length > 0) {
-      Chocolat(staticElements, {
-        imageSize: 'contain',
-        loop: true,
-      });
-    }
+    // Initialize Chocolat for static elements (like footer gallery) - now handled dynamically
+    // var staticElements = document.querySelectorAll('.image-link:not(.portfolio-link)');
+    // if (staticElements.length > 0) {
+    //   Chocolat(staticElements, {
+    //     imageSize: 'contain',
+    //     loop: true,
+    //   });
+    // }
     overlayMenu();
 
     jarallax(document.querySelectorAll(".jarallax"));

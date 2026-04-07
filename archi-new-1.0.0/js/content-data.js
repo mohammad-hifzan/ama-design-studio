@@ -118,9 +118,10 @@
       if (item.categories && item.categories.length) {
         classes += " " + item.categories.join(" ");
       }
+      var galleryGroup = "portfolio-" + ((item.categories && item.categories[0]) || "all");
       var html =
         '<div class="' + classes + '">' +
-        '<a href="' + item.large + '" class="image-link portfolio-link" title="' + (item.title || "") + '">' +
+        '<a href="' + item.large + '" data-lightbox-gallery="' + galleryGroup + '" class="image-link portfolio-link" title="' + (item.title || "") + '">' +
         '<img src="' + item.thumb + '" class="img-fluid" alt="portfolio">' +
         "</a>" +
         "</div>";
@@ -143,23 +144,22 @@
       // ✅ Trigger filter system
       $(document).trigger('portfolio:rendered');
 
-      // 🔥 ADD THIS HERE (IMPORTANT)
-      if (typeof Chocolat !== "undefined") {
-        // destroy previous instance if exists
-        if (window.chocolatInstance) {
-          window.chocolatInstance.destroy();
-        }
-
-        window.chocolatInstance = Chocolat(
-          document.querySelectorAll('.portfolio-link'),
-          {
-            imageSize: 'contain',
-            loop: true,
-          }
-        );
-      }
-
       galleriesLoaded++;
+      if (galleriesLoaded === 2) {
+        // Initialize Chocolat for all galleries after both are loaded
+        if (typeof Chocolat !== "undefined") {
+          if (window.chocolatInstance) {
+            window.chocolatInstance.destroy();
+          }
+          window.chocolatInstance = Chocolat(
+            document.querySelectorAll('[data-lightbox-gallery]'),
+            {
+              imageSize: 'contain',
+              loop: true,
+            }
+          );
+        }
+      }
     };
 
     if (!imagesLeft) {
@@ -220,7 +220,7 @@
     $gallery.empty();
     $.each(data, function (index, item) {
       var html =
-        '<a href="' + item.large + '" data-lightbox-gallery="gallery1" title="' + (item.title || "") + '" class="image-link portfolio-link">' +
+        '<a href="' + item.large + '" data-lightbox-gallery="footer-gallery" title="' + (item.title || "") + '" class="image-link footer-link">' +
         '<img src="' + item.thumb + '" alt="' + (item.alt || "") + '" class="gallery-image"></a>';
       $gallery.append(html);
     });
@@ -230,6 +230,21 @@
     var finalizeGallery = function () {
       $(document).trigger('footer:rendered');
       galleriesLoaded++;
+      if (galleriesLoaded === 2) {
+        // Initialize Chocolat for all galleries after both are loaded
+        if (typeof Chocolat !== "undefined") {
+          if (window.chocolatInstance) {
+            window.chocolatInstance.destroy();
+          }
+          window.chocolatInstance = Chocolat(
+            document.querySelectorAll('[data-lightbox-gallery]'),
+            {
+              imageSize: 'contain',
+              loop: true,
+            }
+          );
+        }
+      }
     };
 
     if (!imagesLeft) {
