@@ -224,6 +224,12 @@ h6.light,
   --bs-list-group-border-width: 0;
 }
 
+.img-fluid {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
 /* btn */
 .btn {
   --bs-btn-border-radius: 0;
