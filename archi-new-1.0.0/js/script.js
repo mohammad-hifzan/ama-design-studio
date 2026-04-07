@@ -199,10 +199,15 @@
 
   // init Chocolat light box
   var initChocolat = function() {
-    Chocolat(document.querySelectorAll('.image-link'), {
-        imageSize: 'contain',
-        loop: true,
-    })
+    var elements = document.querySelectorAll('.portfolio-link');
+    console.log('Initializing Chocolat on', elements.length, 'portfolio elements');
+    if (elements.length > 0) {
+      // Initialize Chocolat on portfolio links
+      Chocolat(elements, {
+          imageSize: 'contain',
+          loop: true,
+      });
+    }
   }
 
   $(document).ready(function(){
@@ -211,7 +216,14 @@
     searchButton();
     initSlider();
     jsTabs();
-    initChocolat();
+    // Initialize Chocolat for static elements (like footer gallery)
+    var staticElements = document.querySelectorAll('.image-link:not(.portfolio-link)');
+    if (staticElements.length > 0) {
+      Chocolat(staticElements, {
+        imageSize: 'contain',
+        loop: true,
+      });
+    }
     overlayMenu();
 
     jarallax(document.querySelectorAll(".jarallax"));

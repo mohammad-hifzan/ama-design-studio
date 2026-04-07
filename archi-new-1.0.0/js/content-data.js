@@ -120,7 +120,7 @@
       }
       var html =
         '<div class="' + classes + '">' +
-        '<a href="' + item.large + '" class="image-link" title="' + (item.title || "") + '">' +
+        '<a href="' + item.large + '" class="image-link portfolio-link" title="' + (item.title || "") + '">' +
         '<img src="' + item.thumb + '" class="img-fluid" alt="portfolio">' +
         "</a>" +
         "</div>";
@@ -139,11 +139,27 @@
           $grid.isotope('layout');
         }, 80);
       }
+
+      // ✅ Trigger filter system
       $(document).trigger('portfolio:rendered');
-      galleriesLoaded++;
-      if (galleriesLoaded === 2) {
-        initChocolat();
+
+      // 🔥 ADD THIS HERE (IMPORTANT)
+      if (typeof Chocolat !== "undefined") {
+        // destroy previous instance if exists
+        if (window.chocolatInstance) {
+          window.chocolatInstance.destroy();
+        }
+
+        window.chocolatInstance = Chocolat(
+          document.querySelectorAll('.portfolio-link'),
+          {
+            imageSize: 'contain',
+            loop: true,
+          }
+        );
       }
+
+      galleriesLoaded++;
     };
 
     if (!imagesLeft) {
@@ -204,8 +220,8 @@
     $gallery.empty();
     $.each(data, function (index, item) {
       var html =
-        '<a href="' + item.href + '" data-lightbox-gallery="gallery1" title="' + (item.title || "") + '" class="image-link">' +
-        '<img src="' + item.src + '" alt="' + (item.alt || "") + '" class="gallery-image"></a>';
+        '<a href="' + item.large + '" data-lightbox-gallery="gallery1" title="' + (item.title || "") + '" class="image-link portfolio-link">' +
+        '<img src="' + item.thumb + '" alt="' + (item.alt || "") + '" class="gallery-image"></a>';
       $gallery.append(html);
     });
 
@@ -214,9 +230,6 @@
     var finalizeGallery = function () {
       $(document).trigger('footer:rendered');
       galleriesLoaded++;
-      if (galleriesLoaded === 2) {
-        initChocolat();
-      }
     };
 
     if (!imagesLeft) {
@@ -256,12 +269,10 @@
         if (!data.result) return;
         
         const allItems = [];
-
         // Loop over every project your friend created
         data.result.forEach(project => {
           const categoryClass = (project.category || "").toLowerCase();
           const projectTitle = project.title || "";
-
           // Loop over every image inside that project's gallery
           if (project.imageUrls && project.imageUrls.length > 0) {
             project.imageUrls.forEach(imgUrl => {
@@ -286,12 +297,16 @@
   }
 
   function fetchFooterGalleryFromSanity() {
-    // 🔥 1. REPLACE THIS WITH YOUR 8-CHARACTER SANITY PROJECT ID
     const projectId = "aqcd5swq"; 
     const dataset = "production";
 
     // This GROQ query says: "Get all footer gallery items"
-    const groqQuery = '*[_type == "footerGallery"]{ title, "href": image.asset->url, "src": thumbnail.asset->url, alt }';
+    const groqQuery = `
+      *[_type == "project"]{
+        title,
+        "imageUrls": gallery[].asset->url
+      }
+      `;
     const encodedQuery = encodeURIComponent(groqQuery);
     
     // The standard Sanity HTTP API URL
@@ -301,17 +316,24 @@
       .then(res => res.json())
       .then(data => {
         if (!data.result) return;
-        
         const allItems = [];
 
         // Loop over every footer gallery item
-        data.result.forEach(item => {
-          allItems.push({
-            href: item.href + "?w=1600&auto=format",
-            src: item.src + "?w=600&h=600&fit=crop&auto=format",
-            title: item.title || "",
-            alt: item.alt || ""
-          });
+        data.result.forEach(project => {
+          const projectTitle = project.title || "";
+          // Loop over every image inside that project's gallery
+          if (project.imageUrls && project.imageUrls.length > 0) {
+            project.imageUrls.forEach(imgUrl => {
+              
+              allItems.push({
+                // Sanity automatically resizes and optimizes images if you add queries to the URL!
+                thumb: imgUrl + "?w=600&h=600&fit=crop&auto=format", 
+                large: imgUrl + "?w=1600&auto=format",
+                title: projectTitle
+              });
+              
+            });
+          }
         });
 
         // Push the formatted items into the theme's content engine and render
