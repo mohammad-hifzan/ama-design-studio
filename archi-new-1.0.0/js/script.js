@@ -24,8 +24,12 @@
   var initIsotope = function () {
     var $buttonGroup = $('#portfolio #filters');
     var $checked = $buttonGroup.find('.is-checked');
-    var filterValue = $checked.attr('data-filter') || '*';
 
+    if (!$checked.length) {
+      $checked = $buttonGroup.find('a').first().addClass('is-checked');
+    }
+
+    var filterValue = $checked.attr('data-filter') || '*';
     filterPortfolio(filterValue);
 
     $buttonGroup.off('click', 'a').on('click', 'a', function (e) {
@@ -40,6 +44,11 @@
   $(document).on('portfolio:rendered', function () {
     var $buttonGroup = $('#portfolio #filters');
     var $checked = $buttonGroup.find('.is-checked');
+
+    if (!$checked.length) {
+      $checked = $buttonGroup.find('a').first().addClass('is-checked');
+    }
+
     var filterValue = $checked.attr('data-filter') || '*';
     filterPortfolio(filterValue);
   });
@@ -209,6 +218,10 @@
       });
     }
   }
+
+  $('.hover-target').on('click', function() {
+    $('.nav-overlay').closest('.nav-active').removeClass('nav-active');
+  });
 
   $(document).ready(function(){
 
