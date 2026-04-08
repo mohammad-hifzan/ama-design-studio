@@ -24,21 +24,21 @@
         title: "Modern Designs",
         image: "archi-new-1.0.0/images/main-banner1.jpg",
         buttonText: "View Project",
-        buttonLink: "#",
+        buttonLink: "#portfolio",
         alt: "Modern architectural design"
       },
       {
         title: "Clean & Minimal",
         image: "archi-new-1.0.0/images/main-banner2.jpg",
         buttonText: "View Project",
-        buttonLink: "#",
+        buttonLink: "#portfolio",
         alt: "Clean and minimal interior"
       },
       {
         title: "Personalize and Customize",
         image: "archi-new-1.0.0/images/main-banner3.jpg",
         buttonText: "View Project",
-        buttonLink: "#",
+        buttonLink: "#portfolio",
         alt: "Custom architecture concept"
       }
     ],
@@ -364,6 +364,6 @@
     fetchPortfolioFromSanity(); // Call Sanity instead of Cloudinary
     renderServices();
     renderBlogPosts();
-    fetchFooterGalleryFromSanity(); // Fetch footer gallery from Sanity
+    // fetchFooterGalleryFromSanity(); // Fetch footer gallery from Sanity
   });
 })(jQuery);
