@@ -11,6 +11,20 @@
 
   var galleriesLoaded = 0;
 
+  function escapeAttr(value) {
+    return String(value == null ? "" : value)
+      .replace(/&/g, "&amp;")
+      .replace(/"/g, "&quot;")
+      .replace(/</g, "&lt;");
+  }
+
+  function escapeHtml(value) {
+    return String(value == null ? "" : value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+
   window.archiContent = {
     heroSlides: [
       {
@@ -87,11 +101,22 @@
     if (!$slider.length) return;
     $slider.empty();
     $.each(data, function (index, slide) {
+      var altText =
+        slide.alt ||
+        "AMA Design Studio — " + (slide.title || "architecture and interior design in Prayagraj");
       var html =
         '<div class="slider-item jarallax" data-speed="0.2">' +
-        '<img src="' + slide.image + '" alt="' + (slide.alt || "banner") + '" class="jarallax-img">' +
+        '<img src="' +
+        slide.image +
+        '" alt="' +
+        escapeAttr(altText) +
+        '" class="jarallax-img"' +
+        (index === 0 ? ' fetchpriority="high"' : "") +
+        ' decoding="async">' +
         '<div class="banner-content">' +
-        '<h2 class="banner-title txt-fx">' + slide.title + "</h2>";
+        '<h2 class="banner-title txt-fx">' +
+        escapeHtml(slide.title) +
+        "</h2>";
       if (slide.buttonText) {
         html += '<div class="btn-wrap"><a href="' + (slide.buttonLink || "#") + '" class="btn-with-line">' + slide.buttonText + "</a></div>";
       }
@@ -112,10 +137,22 @@
         classes += " " + item.categories.join(" ");
       }
       var galleryGroup = "portfolio-" + ((item.categories && item.categories[0]) || "all");
+      var projectTitle = item.title || "Architecture and interior portfolio project";
+      var imgAlt = projectTitle + " — AMA Design Studio portfolio, Prayagraj";
       var html =
         '<div class="' + classes + '">' +
-        '<a href="' + item.large + '" data-lightbox-gallery="' + galleryGroup + '" class="image-link portfolio-link" title="' + (item.title || "") + '">' +
-        '<img src="' + item.thumb + '" class="img-fluid" alt="portfolio">' +
+        '<a href="' +
+        item.large +
+        '" data-lightbox-gallery="' +
+        galleryGroup +
+        '" class="image-link portfolio-link" title="' +
+        escapeAttr(projectTitle) +
+        '">' +
+        '<img src="' +
+        item.thumb +
+        '" class="img-fluid" alt="' +
+        escapeAttr(imgAlt) +
+        '">' +
         "</a>" +
         "</div>";
       $grid.append(html);
