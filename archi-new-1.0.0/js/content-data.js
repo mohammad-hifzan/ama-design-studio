@@ -9,14 +9,21 @@
    * ============================================
    */
 
-  var PORTFOLIO_CATEGORY_ORDER = [
-    "construction",
-    "interior",
-    "landscape",
-    "design"
-  ];
-
   var galleriesLoaded = 0;
+
+  function escapeAttr(value) {
+    return String(value == null ? "" : value)
+      .replace(/&/g, "&amp;")
+      .replace(/"/g, "&quot;")
+      .replace(/</g, "&lt;");
+  }
+
+  function escapeHtml(value) {
+    return String(value == null ? "" : value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
 
   window.archiContent = {
     heroSlides: [
@@ -49,18 +56,18 @@
     services: [
       {
         number: "01",
-        title: "Architecture Portfolio",
-        text: "Lectus molestie id enim ipsum. Netus sed cursus nibh iaculis ipsum turpis nulla blandit dui."
+        title: "Architecture",
+        text: "We conceptualize structures that harmonize with their environment while pushing the boundaries of modern design. Our approach integrates sustainable practices and innovative geometry to create functional landmarks that endure for generations."
       },
       {
         number: "02",
-        title: "Planning Process",
-        text: "Lectus molestie id enim ipsum. Netus sed cursus nibh iaculis ipsum turpis nulla blandit dui."
+        title: "Interior",
+        text: "Beyond aesthetics, we curate internal environments that prioritize human experience. By balancing light, texture, and materiality, we transform interior volumes into cohesive, bespoke spaces that reflect the unique identity of the occupant."
       },
       {
         number: "03",
-        title: "Unique Design",
-        text: "Lectus molestie id enim ipsum. Netus sed cursus nibh iaculis ipsum turpis nulla blandit dui."
+        title: "Design And Build",
+        text: "Our integrated project delivery ensures a seamless transition from the drawing board to the final brick. We provide comprehensive oversight, managing every technical detail and construction phase to maintain the uncompromising integrity of the original vision."
       }
     ],
 
@@ -94,11 +101,22 @@
     if (!$slider.length) return;
     $slider.empty();
     $.each(data, function (index, slide) {
+      var altText =
+        slide.alt ||
+        "AMA Design Studio — " + (slide.title || "architecture and interior design in Prayagraj");
       var html =
         '<div class="slider-item jarallax" data-speed="0.2">' +
-        '<img src="' + slide.image + '" alt="' + (slide.alt || "banner") + '" class="jarallax-img">' +
+        '<img src="' +
+        slide.image +
+        '" alt="' +
+        escapeAttr(altText) +
+        '" class="jarallax-img"' +
+        (index === 0 ? ' fetchpriority="high"' : "") +
+        ' decoding="async">' +
         '<div class="banner-content">' +
-        '<h2 class="banner-title txt-fx">' + slide.title + "</h2>";
+        '<h2 class="banner-title txt-fx">' +
+        escapeHtml(slide.title) +
+        "</h2>";
       if (slide.buttonText) {
         html += '<div class="btn-wrap"><a href="' + (slide.buttonLink || "#") + '" class="btn-with-line">' + slide.buttonText + "</a></div>";
       }
@@ -119,10 +137,22 @@
         classes += " " + item.categories.join(" ");
       }
       var galleryGroup = "portfolio-" + ((item.categories && item.categories[0]) || "all");
+      var projectTitle = item.title || "Architecture and interior portfolio project";
+      var imgAlt = projectTitle + " — AMA Design Studio portfolio, Prayagraj";
       var html =
         '<div class="' + classes + '">' +
-        '<a href="' + item.large + '" data-lightbox-gallery="' + galleryGroup + '" class="image-link portfolio-link" title="' + (item.title || "") + '">' +
-        '<img src="' + item.thumb + '" class="img-fluid" alt="portfolio">' +
+        '<a href="' +
+        item.large +
+        '" data-lightbox-gallery="' +
+        galleryGroup +
+        '" class="image-link portfolio-link" title="' +
+        escapeAttr(projectTitle) +
+        '">' +
+        '<img src="' +
+        item.thumb +
+        '" class="img-fluid" alt="' +
+        escapeAttr(imgAlt) +
+        '">' +
         "</a>" +
         "</div>";
       $grid.append(html);
